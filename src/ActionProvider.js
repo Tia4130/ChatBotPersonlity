@@ -1,15 +1,33 @@
-import React from 'react';
+import { prettyDOM } from "@testing-library/react";
 
-const ActionProvider = ({ createChatBotMessage, setState, children }) => {
-    return (
-        <div>
-            {React.Children.map(children, (child) => {
-                return React.cloneElement(child, {
-                    actions: {},
-                });
-            })}
-        </div>
-    );
-};
+class ActionProvider {
+    constructor(createChatBotMessage, setStateFunc) {
+        this.createChatBotMessage = createChatBotMessage;
+        this.setState = setStateFunc;
+    }
+
+    greet = () => {
+        const message = this.createChatBotMessage("hello friend.");
+        this.addMessageToState(message);
+    }
+
+    handleJavascriptQuiz = () => {
+        const message = this.createChatBotMessage(
+            "Fantastic. Here is your quiz. Good luck!",
+            {
+                widget: "javascriptQuiz",
+            }
+        );
+
+        this.addMessageToState(message);
+    };
+
+    addMessageToState = (message) => {
+        this.setState(prevState => ({
+            ...prevState,
+            messages: [...prevState.messages, message],
+        }))
+    }
+}
 
 export default ActionProvider;
